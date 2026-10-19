@@ -20,6 +20,8 @@ interface AutomataGraphViewerProps {
   title: string;
   stageName: string;
   emptyMessage?: string;
+  highlightStateId?: string | null;
+  highlightTransition?: { fromState: string; toState: string } | null;
 }
 
 export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
@@ -27,6 +29,8 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
   title,
   stageName,
   emptyMessage = 'No graph data available for this stage.',
+  highlightStateId = null,
+  highlightTransition = null,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -268,6 +272,19 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
               <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#10b981" />
             </marker>
 
+            {/* Simulation Active Transition Arrowhead */}
+            <marker
+              id="arrow-highlight"
+              viewBox="0 0 10 10"
+              refX="9"
+              refY="5"
+              markerWidth="8"
+              markerHeight="8"
+              orient="auto-start-reverse"
+            >
+              <path d="M 0 1 L 9 5 L 0 9 z" fill="#f59e0b" />
+            </marker>
+
             {/* Start state incoming arrow */}
             <marker
               id="arrow-start"
@@ -290,16 +307,26 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
               const dst = nodeMap.get(edge.target);
               if (!src || !dst) return null;
 
-              const isEdgeActive =
-                activeNodeId && (edge.source === activeNodeId || edge.target === activeNodeId);
+              const isTransitionHighlighted =
+                highlightTransition &&
+                edge.source === highlightTransition.fromState &&
+                edge.target === highlightTransition.toState;
 
-              const strokeColor = isEdgeActive
+              const isEdgeActive =
+                isTransitionHighlighted ||
+                (activeNodeId && (edge.source === activeNodeId || edge.target === activeNodeId));
+
+              const strokeColor = isTransitionHighlighted
+                ? '#f59e0b'
+                : isEdgeActive
                 ? '#10b981'
                 : edge.isEpsilon
                 ? '#06b6d4'
                 : '#14b8a6';
 
-              const markerId = isEdgeActive
+              const markerId = isTransitionHighlighted
+                ? 'url(#arrow-highlight)'
+                : isEdgeActive
                 ? 'url(#arrow-active)'
                 : edge.isEpsilon
                 ? 'url(#arrow-cyan)'
@@ -448,7 +475,8 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
 
             {/* Render States (Nodes) */}
             {nodes.map((node) => {
-              const isSelected = activeNodeId === node.id;
+              const isHighlighted = highlightStateId === node.id;
+              const isSelected = activeNodeId === node.id || isHighlighted;
               const r = node.radius;
 
               return (
@@ -488,31 +516,33 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
                     </g>
                   )}
 
-                  {/* Outer circle halo on selection */}
+                  {/* Outer circle halo on simulation highlight or manual selection */}
                   {isSelected && (
                     <circle
-                      r={r + 6}
+                      r={r + (isHighlighted ? 8 : 6)}
                       fill="none"
-                      stroke="#14b8a6"
-                      strokeWidth="2"
-                      strokeDasharray="3 3"
+                      stroke={isHighlighted ? '#f59e0b' : '#14b8a6'}
+                      strokeWidth={isHighlighted ? 2.5 : 2}
+                      strokeDasharray={isHighlighted ? '4 2' : '3 3'}
                       className="animate-spin"
-                      style={{ transformOrigin: '0 0', animationDuration: '8s' }}
+                      style={{ transformOrigin: '0 0', animationDuration: isHighlighted ? '5s' : '8s' }}
                     />
                   )}
 
                   {/* Primary Node Circle */}
                   <circle
                     r={r}
-                    fill={node.isAccepting ? '#064e3b' : '#0f172a'}
+                    fill={isHighlighted ? '#451a03' : node.isAccepting ? '#064e3b' : '#0f172a'}
                     stroke={
-                      isSelected
+                      isHighlighted
+                        ? '#f59e0b'
+                        : isSelected
                         ? '#38bdf8'
                         : node.isAccepting
                         ? '#10b981'
                         : '#14b8a6'
                     }
-                    strokeWidth={isSelected ? 3 : 2}
+                    strokeWidth={isHighlighted ? 3.5 : isSelected ? 3 : 2}
                     className="transition-colors group-hover:stroke-teal-300"
                   />
 
