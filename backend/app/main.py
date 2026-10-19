@@ -38,6 +38,5 @@ async def health_check():
     }
 
 
-# Phase 2 Placeholder:
-# from app.api import router as api_router
-# app.include_router(api_router, prefix="/api")
+from app.api import api_router
+app.include_router(api_router, prefix="/api")
