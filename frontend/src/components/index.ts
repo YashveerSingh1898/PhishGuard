@@ -1,6 +1,11 @@
-/**
- * UI Components export entry point.
- * Reusable components (ScoreCard, AutomataGraphViewer, URLInput, VerdictBadge)
- * will be exported from here in Phase 2.
- */
-export {};
+export { Header } from './Header';
+export { RegexInputPanel } from './RegexInputPanel';
+export { PipelineProgress } from './PipelineProgress';
+export { AutomataGraphViewer } from './AutomataGraphViewer';
+export { TransitionTable } from './TransitionTable';
+export { ConversionTracePanel } from './ConversionTracePanel';
+export { StateComparisonCard } from './StateComparisonCard';
+export { TheoryModal } from './TheoryModal';
+export { DetectionScanner } from './DetectionScanner';
+export { DetectionResultsCard } from './DetectionResultsCard';
+export { AutomataExecutionViewer } from './AutomataExecutionViewer';

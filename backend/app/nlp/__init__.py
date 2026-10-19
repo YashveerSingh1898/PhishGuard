@@ -1,10 +1,20 @@
-"""Natural Language Processing (NLP) Module.
+"""Natural Language Processing (NLP) Module for PhishGuard."""
 
-This module will implement the message text classification pipeline:
-1. Text Preprocessing: Normalization, cleaning, and URL masking
-2. Tokenization & Stopword Filtering: Pruning non-discriminative terms
-3. TF-IDF Vectorization: Feature extraction and term weighting
-4. Multinomial Naive Bayes: Posterior probability estimation for phishing intent
+from app.nlp.preprocessor import preprocess_text, normalize_text, tokenize, remove_stopwords
+from app.nlp.classifier import (
+    PhishingNLPClassifier,
+    NLPAnalysisResult,
+    get_nlp_classifier,
+    LIMITATIONS_NOTE,
+)
 
-Models and preprocessing pipelines will be implemented in Phase 2.
-"""
+__all__ = [
+    "preprocess_text",
+    "normalize_text",
+    "tokenize",
+    "remove_stopwords",
+    "PhishingNLPClassifier",
+    "NLPAnalysisResult",
+    "get_nlp_classifier",
+    "LIMITATIONS_NOTE",
+]

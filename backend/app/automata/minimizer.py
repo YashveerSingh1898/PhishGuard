@@ -16,7 +16,7 @@ from collections import deque
 from dataclasses import dataclass
 from typing import Dict, List, Set, Tuple, Any, Optional
 
-from app.automata.dfa import DFA, DFATransition
+from app.automata.dfa import DFA, DFATransition, DFAExecutionStep
 
 
 @dataclass
@@ -96,6 +96,59 @@ class MinimizedDFA:
             current = next_state
 
         return current in self.accepting_states
+
+    def simulate(self, input_string: str) -> Dict[str, Any]:
+        """Simulates string consumption on the Minimized DFA, recording a step-by-step execution trace."""
+        current = self.start_state
+        steps: List[DFAExecutionStep] = []
+
+        for i, char in enumerate(input_string):
+            if current == "DEAD":
+                steps.append(DFAExecutionStep(
+                    position=i,
+                    char=char,
+                    from_state="DEAD",
+                    symbol=char,
+                    to_state="DEAD",
+                    is_dead=True,
+                    explanation=f"Pos {i}: Automaton remains in Dead / Trap state on symbol '{char}'."
+                ))
+                continue
+
+            next_state = self.transitions.get((current, char))
+            if next_state is None:
+                is_in_alpha = char in self.alphabet
+                reason = f"Symbol '{char}' not in alphabet Σ" if not is_in_alpha else f"No transition defined from {current} on '{char}'"
+                steps.append(DFAExecutionStep(
+                    position=i,
+                    char=char,
+                    from_state=current,
+                    symbol=char,
+                    to_state="DEAD",
+                    is_dead=True,
+                    explanation=f"Pos {i}: {reason} → transitions to Dead state."
+                ))
+                current = "DEAD"
+            else:
+                steps.append(DFAExecutionStep(
+                    position=i,
+                    char=char,
+                    from_state=current,
+                    symbol=char,
+                    to_state=next_state,
+                    is_dead=False,
+                    explanation=f"Pos {i}: State {current} consumes '{char}' → transitions to {next_state}."
+                ))
+                current = next_state
+
+        is_accepted = current in self.accepting_states
+        return {
+            "input_string": input_string,
+            "steps": [s.to_dict() for s in steps],
+            "final_state": current,
+            "is_accepted": is_accepted,
+            "total_steps": len(steps),
+        }
 
     def to_dict(self) -> Dict[str, Any]:
         """Exports JSON-serializable representation of the Minimized DFA."""

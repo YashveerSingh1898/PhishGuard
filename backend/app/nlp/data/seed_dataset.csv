@@ -1,0 +1,41 @@
+text,label
+"Your semester grade report is now ready for viewing on the student self-service portal.",Legitimate
+"Reminder: The university library will be closed this Sunday for scheduled system maintenance.",Legitimate
+"Your weekly team sync meeting is scheduled for tomorrow at 10:00 AM in Conference Room B.",Legitimate
+"Your package with tracking number 9400111202555 has been delivered to your front porch.",Legitimate
+"Attached are the meeting minutes and presentation slides from yesterday's engineering workshop.",Legitimate
+"Monthly statement for your water and electricity utility account is now available to download.",Legitimate
+"Thank you for your order. Your receipt #89211 has been processed and your item will ship soon.",Legitimate
+"The campus computer science department is hosting a guest lecture on distributed algorithms this Friday.",Legitimate
+"Flight confirmation: Your reservation for flight UA 412 has been confirmed. Seat 14B.",Legitimate
+"Your quarterly dental checkup appointment is confirmed for Tuesday at 2:30 PM with Dr. Harris.",Legitimate
+"Notice: Software update v4.2.0 will be deployed tonight at midnight. No service downtime is expected.",Legitimate
+"The syllabus, lecture schedule, and recommended readings for CS 401 have been uploaded to Canvas.",Legitimate
+"Your monthly gym membership fee has been successfully charged to your card ending in 4012.",Legitimate
+"Please submit your travel reimbursement receipts to the department administrator before Friday.",Legitimate
+"Annual benefits open enrollment begins next week. Review healthcare plans on the HR portal.",Legitimate
+"Campus dining halls will observe holiday hours starting next Monday. Check the website for details.",Legitimate
+"Your reservation at Bistro Central for a party of 4 on Saturday at 7:00 PM is confirmed.",Legitimate
+"The student government association election ballots are open until 5:00 PM tomorrow afternoon.",Legitimate
+"Here is the summary of project deliverables and milestones agreed upon during today's sprint review.",Legitimate
+"Your paper submission titled 'Formal Verification of DFA' has been received by the conference committee.",Legitimate
+"URGENT: Your account has been suspended due to suspicious activity. Verify your identity within 24 hours to prevent permanent closure.",Phishing
+"Security Alert: We detected an unauthorized login to your account from an unrecognized IP address. Confirm your password immediately.",Phishing
+"Immediate Action Required: Your direct deposit payroll could not be processed. Update your banking credentials now to receive pay.",Phishing
+"Dear Customer, Your email mailbox has exceeded its storage quota. Re-activate your account or all incoming messages will be deleted.",Phishing
+"Official Tax Notification: You are eligible for an unclaimed tax refund of $1,450. Submit your SSN and credit card details to claim.",Phishing
+"Warning: Multiple failed login attempts detected on your banking portal. Click here to verify your identity and unlock your account.",Phishing
+"Your subscription payment has failed. Re-enter your credit card number and billing address immediately to avoid account cancellation.",Phishing
+"Final Notice: Your domain registration expires today. Renew immediately or your website will be permanently deactivated and released.",Phishing
+"You have received a secure confidential message from HR payroll. Log in with your corporate email and password to view the document.",Phishing
+"Notice of unpaid traffic violation: Pay your citation within 48 hours to avoid legal summons and immediate driver license suspension.",Phishing
+"Account Compromise Detected: A wire transfer of $2,450 is pending. If you did not authorize this, log in immediately to cancel.",Phishing
+"Congratulations! You have been selected as the recipient of our annual cash grant. Provide your bank account details for deposit.",Phishing
+"IT Support Alert: Mandatory security update required for all staff. Enter your corporate login and current password to authenticate.",Phishing
+"Urgent: Unrecognized device logged into your Apple iCloud account. Verify your account ownership immediately or access will be revoked.",Phishing
+"Emergency Notification: Your credit card has been temporarily locked due to fraudulent charges. Confirm your card details to restore.",Phishing
+"COVID-19 Relief Fund: Federal government economic assistance distribution. Register your bank account credentials before the deadline.",Phishing
+"Your order for iPhone 15 Pro ($1,199) has been confirmed. If you did not make this purchase, call support and verify credentials.",Phishing
+"Critical Notice: Your cloud drive storage will be terminated in 12 hours. Update your billing information now to save your files.",Phishing
+"Human Resources Alert: Updated executive salary adjustments for the current quarter. Sign in with your company credentials to view.",Phishing
+"Security Warning: Your password expires in 2 hours. Click the link below to verify your current password and set a new one.",Phishing

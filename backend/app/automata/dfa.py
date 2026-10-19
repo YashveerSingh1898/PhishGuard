@@ -73,6 +73,29 @@ class SubsetTraceStep:
         }
 
 
+@dataclass
+class DFAExecutionStep:
+    """Record of a single character transition during input string evaluation."""
+    position: int
+    char: str
+    from_state: str
+    symbol: str
+    to_state: str
+    is_dead: bool
+    explanation: str
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "position": self.position,
+            "char": self.char,
+            "from_state": self.from_state,
+            "symbol": self.symbol,
+            "to_state": self.to_state,
+            "is_dead": self.is_dead,
+            "explanation": self.explanation,
+        }
+
+
 class DFA:
     """Deterministic Finite Automaton.
     
@@ -118,6 +141,59 @@ class DFA:
             current = next_state
 
         return current in self.accepting_states
+
+    def simulate(self, input_string: str) -> Dict[str, Any]:
+        """Simulates string consumption on the DFA, recording a step-by-step execution trace."""
+        current = self.start_state
+        steps: List[DFAExecutionStep] = []
+
+        for i, char in enumerate(input_string):
+            if current == "DEAD":
+                steps.append(DFAExecutionStep(
+                    position=i,
+                    char=char,
+                    from_state="DEAD",
+                    symbol=char,
+                    to_state="DEAD",
+                    is_dead=True,
+                    explanation=f"Pos {i}: Automaton remains in Dead / Trap state on symbol '{char}'."
+                ))
+                continue
+
+            next_state = self.transitions.get((current, char))
+            if next_state is None:
+                is_in_alpha = char in self.alphabet
+                reason = f"Symbol '{char}' not in alphabet Σ" if not is_in_alpha else f"No transition defined from {current} on '{char}'"
+                steps.append(DFAExecutionStep(
+                    position=i,
+                    char=char,
+                    from_state=current,
+                    symbol=char,
+                    to_state="DEAD",
+                    is_dead=True,
+                    explanation=f"Pos {i}: {reason} → transitions to Dead state."
+                ))
+                current = "DEAD"
+            else:
+                steps.append(DFAExecutionStep(
+                    position=i,
+                    char=char,
+                    from_state=current,
+                    symbol=char,
+                    to_state=next_state,
+                    is_dead=False,
+                    explanation=f"Pos {i}: State {current} consumes '{char}' → transitions to {next_state}."
+                ))
+                current = next_state
+
+        is_accepted = current in self.accepting_states
+        return {
+            "input_string": input_string,
+            "steps": [s.to_dict() for s in steps],
+            "final_state": current,
+            "is_accepted": is_accepted,
+            "total_steps": len(steps),
+        }
 
     def to_dict(self) -> Dict[str, Any]:
         """Exports JSON-serializable representation of the DFA."""

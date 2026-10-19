@@ -21,6 +21,11 @@ from app.automata.nfa import NFA, NFATransition, regex_to_nfa, ThompsonBuilder
 from app.automata.dfa import DFA, DFAState, DFATransition, nfa_to_dfa
 from app.automata.minimizer import MinimizedDFA, MinimizedState, minimize_dfa
 from app.automata.service import convert_regex_pipeline
+from app.automata.structural_detector import (
+    StructuralDetector,
+    StructuralAnalysisResult,
+    MatchedIndicator,
+)
 
 __all__ = [
     "RegexSyntaxError",
@@ -44,4 +49,7 @@ __all__ = [
     "MinimizedState",
     "minimize_dfa",
     "convert_regex_pipeline",
+    "StructuralDetector",
+    "StructuralAnalysisResult",
+    "MatchedIndicator",
 ]
