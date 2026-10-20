@@ -127,81 +127,134 @@ export default function App() {
       id: 'overview' as NavigationSection,
       label: 'Overview',
       icon: LayoutDashboard,
-      badge: null,
     },
     {
       id: 'analyze' as NavigationSection,
       label: 'Analyze Email',
       icon: Mail,
-      badge: 'Input',
     },
     {
       id: 'automata' as NavigationSection,
       label: 'Automata Lab',
       icon: Cpu,
-      badge: 'MOC',
     },
     {
       id: 'nlp' as NavigationSection,
       label: 'NLP Analysis',
       icon: Brain,
-      badge: 'Bayes',
     },
     {
       id: 'fusion' as NavigationSection,
       label: 'Risk Fusion',
       icon: Scale,
-      badge: '60:40',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-navy-950 text-slate-100 flex flex-col md:flex-row selection:bg-teal-500/25 selection:text-teal-200">
-      {/* 1. Mobile Top Bar */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-navy-900/90 backdrop-blur-md border-b border-white/5">
-        <div className="flex items-center gap-2.5">
-          <div className="p-1.5 rounded-lg bg-gradient-to-br from-teal-500/20 to-cyan-500/10 text-teal-400 border border-teal-500/30 shadow-inner">
-            <Shield className="w-5 h-5" />
+    <div className="min-h-screen bg-cipher-bg text-cipher-text flex flex-col selection:bg-cipher-terracotta/25 selection:text-cipher-text">
+      {/* 1. Compact Sticky Top Navigation Bar */}
+      <header className="sticky top-0 z-40 w-full bg-cipher-surface/90 backdrop-blur-md border-b border-cipher-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+          {/* Left: Brand Identity */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setActiveSection('overview')}
+              className="flex items-center gap-2.5 text-left group"
+            >
+              <div className="p-2 rounded-xl bg-gradient-to-br from-cipher-terracotta/25 to-cipher-sage/20 border border-cipher-terracotta/30 text-cipher-terracotta group-hover:border-cipher-terracotta transition-all shadow-sm">
+                <Shield className="w-5 h-5 text-[#F2F0EC]" />
+              </div>
+              <div>
+                <span className="text-base font-bold text-cipher-text tracking-tight font-sans block group-hover:text-white transition-colors">
+                  PhishGuard
+                </span>
+                <span className="text-[10px] text-cipher-muted font-mono tracking-tight block">
+                  Automata + NLP
+                </span>
+              </div>
+            </button>
           </div>
-          <div>
-            <span className="text-sm font-semibold text-white tracking-tight">PhishGuard</span>
-            <span className="text-[10px] text-slate-400 block font-mono">Automata + NLP</span>
+
+          {/* Center: Desktop Navigation Links */}
+          <nav className="hidden md:flex items-center gap-1 bg-cipher-bg/70 p-1 rounded-xl border border-cipher-border">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeSection === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveSection(item.id);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all ${
+                    isActive
+                      ? 'bg-gradient-to-r from-cipher-terracotta/20 to-cipher-sage/20 text-cipher-text border border-cipher-terracotta/40 shadow-sm font-semibold'
+                      : 'text-cipher-muted hover:text-cipher-text hover:bg-cipher-surface/60 border border-transparent'
+                  }`}
+                >
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-cipher-terracotta' : 'text-cipher-muted'}`} />
+                  <span className="font-sans text-[13px]">{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Right: Backend Connection Indicator & Theory Button */}
+          <div className="flex items-center gap-2.5">
+            {/* Backend Health indicator */}
+            <div
+              className={`hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-full text-[11px] font-mono border ${
+                backendStatus === 'healthy'
+                  ? 'bg-cipher-green/10 text-cipher-green border-cipher-green/30'
+                  : backendStatus === 'checking'
+                  ? 'bg-cipher-amber/10 text-cipher-amber border-cipher-amber/30'
+                  : 'bg-cipher-danger/10 text-cipher-danger border-cipher-danger/30'
+              }`}
+              title={`API Version: ${backendVersion || 'v0.1.0'}`}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  backendStatus === 'healthy'
+                    ? 'bg-cipher-green shadow-sm shadow-cipher-green/50'
+                    : backendStatus === 'checking'
+                    ? 'bg-cipher-amber animate-pulse'
+                    : 'bg-cipher-danger'
+                }`}
+              />
+              <span className="text-[10px] font-sans">
+                {backendStatus === 'healthy' ? 'Connected' : backendStatus === 'checking' ? 'Connecting...' : 'Disconnected'}
+              </span>
+            </div>
+
+            {/* Theory Guide button */}
+            <button
+              type="button"
+              onClick={() => setIsTheoryOpen(true)}
+              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cipher-elevated hover:bg-cipher-border text-cipher-muted hover:text-cipher-text border border-cipher-border text-xs font-mono transition-all"
+              title="MOC Theory Reference"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-cipher-sage" />
+              <span className="font-sans text-xs">Theory Guide</span>
+            </button>
+
+            {/* Mobile Menu Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg bg-cipher-surface border border-cipher-border text-cipher-muted hover:text-cipher-text"
+              aria-label="Toggle navigation menu"
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 rounded-lg bg-navy-950/80 border border-white/10 text-slate-300 hover:text-white"
-        >
-          {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
-      </div>
-
-      {/* 2. Compact Sidebar Navigation */}
-      <aside
-        className={`${
-          isMobileMenuOpen ? 'block' : 'hidden'
-        } md:flex flex-col justify-between w-full md:w-64 bg-navy-900/80 backdrop-blur-xl border-r border-white/5 p-4 shrink-0 transition-all z-20`}
-      >
-        <div className="space-y-6">
-          {/* Logo / Title */}
-          <div className="hidden md:flex items-center gap-3 px-2 py-2">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/10 text-teal-400 border border-teal-500/30 shadow-inner">
-              <Shield className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-sm font-bold text-white tracking-tight font-sans block">
-                PhishGuard
-              </span>
-              <span className="text-[10px] text-slate-400 font-mono tracking-tight block">
-                Automata + NLP Engine
-              </span>
-            </div>
-          </div>
-
-          {/* Navigation Links */}
-          <nav className="space-y-1">
+        {/* Mobile Dropdown Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden px-4 pt-2 pb-4 bg-cipher-surface border-b border-cipher-border space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeSection === item.id;
@@ -214,79 +267,30 @@ export default function App() {
                     setIsMobileMenuOpen(false);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className={`w-full group flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-mono font-medium transition-all text-left relative ${
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-mono font-medium transition-all text-left ${
                     isActive
-                      ? 'bg-teal-500/10 text-teal-300 border border-teal-500/25 shadow-sm shadow-teal-500/5'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.03] border border-transparent'
+                      ? 'bg-cipher-terracotta/20 text-cipher-text border border-cipher-terracotta/40 font-semibold'
+                      : 'text-cipher-muted hover:text-cipher-text hover:bg-cipher-elevated border border-transparent'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5">
-                    {/* Active Accent Indicator Bar */}
-                    {isActive && (
-                      <span className="absolute left-1.5 w-1 h-4 bg-teal-400 rounded-full" />
-                    )}
-                    <Icon className={`w-4 h-4 ml-1.5 ${isActive ? 'text-teal-400' : 'text-slate-400 group-hover:text-slate-300'}`} />
-                    <span className="font-sans font-medium text-[13px]">{item.label}</span>
-                  </div>
-
-                  {item.badge && (
-                    <span
-                      className={`text-[10px] font-mono px-1.5 py-0.5 rounded border transition-colors ${
-                        isActive
-                          ? 'bg-teal-500/20 text-teal-300 border-teal-500/30'
-                          : 'bg-navy-950/60 text-slate-500 border-white/5 group-hover:text-slate-400'
-                      }`}
-                    >
-                      {item.badge}
-                    </span>
-                  )}
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-cipher-terracotta' : 'text-cipher-muted'}`} />
+                  <span className="font-sans text-sm">{item.label}</span>
                 </button>
               );
             })}
-          </nav>
-        </div>
 
-        {/* Sidebar Footer */}
-        <div className="space-y-2.5 pt-4 border-t border-white/5 text-xs font-mono">
-          {/* Backend Health indicator */}
-          <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-navy-950/70 border border-white/5 text-[11px]">
-            <span className="text-slate-400">Backend API</span>
-            <div className="flex items-center gap-1.5">
-              <span
-                className={`w-2 h-2 rounded-full ${
-                  backendStatus === 'healthy'
-                    ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50'
-                    : backendStatus === 'checking'
-                    ? 'bg-amber-400 animate-pulse'
-                    : 'bg-rose-400'
-                }`}
-              />
-              <span
-                className={
-                  backendStatus === 'healthy'
-                    ? 'text-emerald-400 font-semibold'
-                    : 'text-slate-400'
-                }
-              >
-                {backendStatus === 'healthy' ? 'Online' : 'Offline'}
+            <div className="pt-2 flex items-center justify-between border-t border-cipher-border text-xs">
+              <span className="text-cipher-muted font-sans">API Status:</span>
+              <span className={backendStatus === 'healthy' ? 'text-cipher-green font-mono' : 'text-cipher-muted font-mono'}>
+                {backendStatus === 'healthy' ? 'Connected' : 'Offline'}
               </span>
             </div>
           </div>
+        )}
+      </header>
 
-          {/* MOC Theory Guide button */}
-          <button
-            type="button"
-            onClick={() => setIsTheoryOpen(true)}
-            className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-navy-950/50 hover:bg-navy-850/80 border border-white/5 hover:border-teal-500/30 text-slate-400 hover:text-teal-300 transition-all text-xs"
-          >
-            <BookOpen className="w-3.5 h-3.5 text-teal-400" />
-            <span className="font-sans">Theory Reference</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* 3. Main Workspace Area */}
-      <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+      {/* 2. Main Workspace Area */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
         <div key={activeSection} className="fade-in-section">
           {/* Section 1: Overview */}
           {activeSection === 'overview' && (
@@ -294,6 +298,7 @@ export default function App() {
               backendStatus={backendStatus}
               backendVersion={backendVersion}
               recentAnalysis={detectionResponse}
+              isDetecting={isDetecting}
               onNavigateToAnalyze={() => setActiveSection('analyze')}
               onNavigateToAutomata={() => setActiveSection('automata')}
               onNavigateToNLP={() => setActiveSection('nlp')}

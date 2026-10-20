@@ -39,13 +39,13 @@ export const TransitionTable: React.FC<TransitionTableProps> = ({
   }, [transitions, searchQuery, selectedSymbol]);
 
   return (
-    <div className="rounded-xl border border-navy-800 bg-navy-900/40 p-4 shadow-md flex flex-col h-full">
+    <div className="rounded-xl border border-cipher-border cipher-surface p-4 shadow-md flex flex-col h-full">
       {/* Header and Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-navy-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-cipher-border">
         <div className="flex items-center gap-2">
-          <Table className="w-4 h-4 text-teal-400" />
-          <h3 className="text-sm font-semibold text-white">{title}</h3>
-          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-navy-800 text-slate-400 border border-navy-700">
+          <Table className="w-4 h-4 text-cipher-sage" />
+          <h3 className="text-sm font-semibold text-cipher-text font-sans">{title}</h3>
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-cipher-elevated text-cipher-muted border border-cipher-border">
             {filteredTransitions.length} of {transitions.length} transitions
           </span>
         </div>
@@ -53,12 +53,12 @@ export const TransitionTable: React.FC<TransitionTableProps> = ({
         {/* Filter bar */}
         <div className="flex items-center gap-2">
           {/* Symbol Filter */}
-          <div className="flex items-center gap-1 text-xs">
-            <Filter className="w-3 h-3 text-slate-500" />
+          <div className="flex items-center gap-1 text-xs font-mono">
+            <Filter className="w-3 h-3 text-cipher-muted" />
             <select
               value={selectedSymbol}
               onChange={(e) => setSelectedSymbol(e.target.value)}
-              className="bg-navy-950 text-slate-300 text-xs px-2 py-1 rounded border border-navy-750 focus:outline-none focus:border-teal-500 font-mono"
+              className="bg-cipher-elevated text-cipher-text text-xs px-2 py-1 rounded-lg border border-cipher-border focus:outline-none focus:border-cipher-terracotta font-mono"
             >
               <option value="all">All Symbols</option>
               {uniqueSymbols.map((sym) => (
@@ -71,22 +71,22 @@ export const TransitionTable: React.FC<TransitionTableProps> = ({
 
           {/* Search Box */}
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-cipher-muted absolute left-2.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter states..."
-              className="bg-navy-950 text-slate-200 text-xs pl-8 pr-2.5 py-1 rounded border border-navy-750 focus:outline-none focus:border-teal-500 placeholder:text-slate-500 font-mono w-28 sm:w-36"
+              className="bg-cipher-elevated text-cipher-text text-xs pl-8 pr-2.5 py-1 rounded-lg border border-cipher-border focus:outline-none focus:border-cipher-terracotta placeholder:text-cipher-muted font-mono w-28 sm:w-36"
             />
           </div>
         </div>
       </div>
 
       {/* Table Container */}
-      <div className="overflow-x-auto max-h-64 overflow-y-auto rounded-lg border border-navy-800 bg-navy-950/60">
+      <div className="overflow-x-auto max-h-64 overflow-y-auto rounded-lg border border-cipher-border bg-cipher-elevated/40">
         <table className="w-full text-left text-xs font-mono">
-          <thead className="bg-navy-900/90 text-slate-400 border-b border-navy-800 sticky top-0 z-10">
+          <thead className="bg-cipher-elevated text-cipher-muted border-b border-cipher-border sticky top-0 z-10">
             <tr>
               <th className="py-2 px-3 font-semibold">#</th>
               <th className="py-2 px-3 font-semibold">Source State (q)</th>
@@ -95,10 +95,10 @@ export const TransitionTable: React.FC<TransitionTableProps> = ({
               <th className="py-2 px-3 font-semibold">Transition Type</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-navy-850 text-slate-300">
+          <tbody className="divide-y divide-cipher-border text-cipher-text/90">
             {filteredTransitions.length === 0 ? (
               <tr>
-                <td colSpan={5} className="py-6 text-center text-slate-500">
+                <td colSpan={5} className="py-6 text-center text-cipher-muted">
                   No transitions match the current filter.
                 </td>
               </tr>
@@ -107,26 +107,26 @@ export const TransitionTable: React.FC<TransitionTableProps> = ({
                 const isEpsilon = isNFA && ('is_epsilon' in t ? t.is_epsilon : t.symbol === 'ε');
 
                 return (
-                  <tr key={idx} className="hover:bg-navy-850/50 transition-colors">
-                    <td className="py-2 px-3 text-slate-500">{idx + 1}</td>
-                    <td className="py-2 px-3 font-bold text-teal-300">{t.from_state}</td>
+                  <tr key={idx} className="hover:bg-cipher-elevated/60 transition-colors">
+                    <td className="py-2 px-3 text-cipher-muted">{idx + 1}</td>
+                    <td className="py-2 px-3 font-bold text-cipher-terracotta">{t.from_state}</td>
                     <td className="py-2 px-3">
                       <span
                         className={`inline-block px-2 py-0.5 rounded font-bold ${
                           isEpsilon
-                            ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20'
-                            : 'bg-navy-800 text-white border border-navy-700'
+                            ? 'bg-cipher-sage/15 text-cipher-sage border border-cipher-sage/30'
+                            : 'bg-cipher-surface text-cipher-text border border-cipher-border'
                         }`}
                       >
                         {t.symbol}
                       </span>
                     </td>
-                    <td className="py-2 px-3 font-bold text-teal-300">{t.to_state}</td>
-                    <td className="py-2 px-3 text-[11px] text-slate-400">
+                    <td className="py-2 px-3 font-bold text-cipher-terracotta">{t.to_state}</td>
+                    <td className="py-2 px-3 text-[11px] text-cipher-muted">
                       {isEpsilon ? (
-                        <span className="text-cyan-400">Spontaneous (ε-move)</span>
+                        <span className="text-cipher-sage">Spontaneous (ε-move)</span>
                       ) : (
-                        <span className="text-slate-400">Deterministic symbol read</span>
+                        <span className="text-cipher-muted">Deterministic symbol read</span>
                       )}
                     </td>
                   </tr>

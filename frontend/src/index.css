@@ -8,12 +8,12 @@
 
 body {
   margin: 0;
-  background-color: #070b14;
+  background-color: #060504;
   background-image: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(14, 165, 233, 0.08), transparent),
-    radial-gradient(ellipse 60% 40% at 90% 100%, rgba(20, 184, 166, 0.05), transparent);
+    radial-gradient(ellipse 70% 45% at 50% -10%, rgba(180, 73, 42, 0.06), transparent),
+    radial-gradient(ellipse 60% 40% at 85% 95%, rgba(135, 141, 107, 0.05), transparent);
   background-attachment: fixed;
-  color: #f1f5f9;
+  color: #F2F0EC;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -26,16 +26,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #080d18;
+  background: #0D0C0B;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #262422;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #383532;
 }
 
 /* Code and mono styling */
@@ -43,29 +43,46 @@ code, pre, .font-mono {
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
-/* Figma / Higgsfield cinematic glass & specular utilities */
-.glass-surface {
-  background: rgba(14, 20, 34, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 
-    0 1px 2px 0 rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+/* Cipher-inspired surfaces and card utilities */
+.cipher-surface {
+  background-color: #121110;
+  border: 1px solid #262422;
+}
+
+.cipher-elevated {
+  background-color: #191816;
+  border: 1px solid #383532;
+}
+
+.cipher-card {
+  background-color: #121110;
+  border: 1px solid #262422;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6);
 }
 
 .glass-card {
-  background: rgba(11, 17, 30, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
-    0 4px 20px -2px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  background-color: #121110;
+  border: 1px solid #262422;
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.7);
+}
+
+.glass-surface {
+  background-color: #121110;
+  border: 1px solid #262422;
 }
 
 .subtle-border {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: #262422;
+}
+
+/* Terracotta to Sage gradients */
+.gradient-terracotta-sage {
+  background: linear-gradient(135deg, rgba(180, 73, 42, 0.18) 0%, rgba(135, 141, 107, 0.18) 100%);
+  border: 1px solid rgba(180, 73, 42, 0.35);
+}
+
+.border-gradient-ts {
+  border-image: linear-gradient(to right, #B4492A, #878D6B) 1;
 }
 
 /* Smooth section fade-in animation */
@@ -83,3 +100,4 @@ code, pre, .font-mono {
 .fade-in-section {
   animation: fadeInSlide 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+

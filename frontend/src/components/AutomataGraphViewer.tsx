@@ -173,15 +173,15 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
   }
 
   return (
-    <div className="flex flex-col bg-navy-950 rounded-xl border border-navy-800 shadow-xl overflow-hidden">
+    <div className="flex flex-col cipher-surface rounded-xl border border-cipher-border shadow-xl overflow-hidden">
       {/* Graph Toolbar */}
-      <div className="px-4 py-3 bg-navy-900/90 border-b border-navy-800 flex flex-wrap items-center justify-between gap-2">
+      <div className="px-4 py-3 bg-cipher-elevated/90 border-b border-cipher-border flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-sm text-white">{title}</span>
-          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-navy-800 text-teal-400 border border-teal-500/20">
+          <span className="font-semibold text-sm text-cipher-text font-sans">{title}</span>
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-cipher-surface text-cipher-sage border border-cipher-sage/20">
             {stageName}
           </span>
-          <span className="text-xs text-slate-400 font-mono hidden sm:inline">
+          <span className="text-xs text-cipher-muted font-mono hidden sm:inline">
             ({nodes.length} states, {graph.edges.length} transitions)
           </span>
         </div>
@@ -191,7 +191,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
           <button
             type="button"
             onClick={() => setZoom((z) => Math.min(2.5, z + 0.15))}
-            className="p-1.5 rounded bg-navy-850 hover:bg-navy-800 text-slate-300 hover:text-white border border-navy-750 transition-colors"
+            className="p-1.5 rounded bg-cipher-surface hover:bg-cipher-elevated text-cipher-muted hover:text-cipher-text border border-cipher-border transition-colors"
             title="Zoom In"
             aria-label="Zoom in"
           >
@@ -200,7 +200,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
           <button
             type="button"
             onClick={() => setZoom((z) => Math.max(0.3, z - 0.15))}
-            className="p-1.5 rounded bg-navy-850 hover:bg-navy-800 text-slate-300 hover:text-white border border-navy-750 transition-colors"
+            className="p-1.5 rounded bg-cipher-surface hover:bg-cipher-elevated text-cipher-muted hover:text-cipher-text border border-cipher-border transition-colors"
             title="Zoom Out"
             aria-label="Zoom out"
           >
@@ -209,13 +209,13 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
           <button
             type="button"
             onClick={handleFitToView}
-            className="p-1.5 rounded bg-navy-850 hover:bg-navy-800 text-slate-300 hover:text-white border border-navy-750 transition-colors"
+            className="p-1.5 rounded bg-cipher-surface hover:bg-cipher-elevated text-cipher-muted hover:text-cipher-text border border-cipher-border transition-colors"
             title="Fit to View / Center"
             aria-label="Fit to view"
           >
             <Maximize2 className="w-3.5 h-3.5" />
           </button>
-          <div className="text-[11px] font-mono text-slate-400 px-2 py-1 rounded bg-navy-850 border border-navy-800">
+          <div className="text-[11px] font-mono text-cipher-muted px-2 py-1 rounded bg-cipher-surface border border-cipher-border">
             {Math.round(zoom * 100)}%
           </div>
         </div>
@@ -229,7 +229,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        className="relative w-full h-[440px] bg-navy-950 overflow-hidden cursor-grab active:cursor-grabbing select-none"
+        className="relative w-full h-[440px] bg-cipher-surface overflow-hidden cursor-grab active:cursor-grabbing select-none"
       >
         <svg className="w-full h-full pointer-events-auto">
           <defs>
@@ -243,7 +243,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
               markerHeight="6"
               orient="auto-start-reverse"
             >
-              <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#14b8a6" />
+              <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#878D6B" />
             </marker>
 
             {/* Epsilon transition arrowhead */}
@@ -256,7 +256,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
               markerHeight="6"
               orient="auto-start-reverse"
             >
-              <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#06b6d4" />
+              <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#878D6B" />
             </marker>
 
             {/* Active / Highlighted arrowhead */}
@@ -269,7 +269,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
               markerHeight="7"
               orient="auto-start-reverse"
             >
-              <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#10b981" />
+              <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#B4492A" />
             </marker>
 
             {/* Simulation Active Transition Arrowhead */}
@@ -282,7 +282,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
               markerHeight="8"
               orient="auto-start-reverse"
             >
-              <path d="M 0 1 L 9 5 L 0 9 z" fill="#f59e0b" />
+              <path d="M 0 1 L 9 5 L 0 9 z" fill="#B4492A" />
             </marker>
 
             {/* Start state incoming arrow */}
@@ -295,7 +295,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
               markerHeight="7"
               orient="auto-start-reverse"
             >
-              <path d="M 0 1 L 9 5 L 0 9 z" fill="#38bdf8" />
+              <path d="M 0 1 L 9 5 L 0 9 z" fill="#878D6B" />
             </marker>
           </defs>
 
@@ -317,12 +317,12 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
                 (activeNodeId && (edge.source === activeNodeId || edge.target === activeNodeId));
 
               const strokeColor = isTransitionHighlighted
-                ? '#f59e0b'
+                ? '#B4492A'
                 : isEdgeActive
-                ? '#10b981'
+                ? '#B4492A'
                 : edge.isEpsilon
-                ? '#06b6d4'
-                : '#14b8a6';
+                ? '#878D6B'
+                : '#5A5854';
 
               const markerId = isTransitionHighlighted
                 ? 'url(#arrow-highlight)'
@@ -453,7 +453,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
                       width={pillWidth}
                       height="18"
                       rx="4"
-                      fill="#0b1120"
+                      fill="#121110"
                       stroke={strokeColor}
                       strokeWidth="1"
                     />
@@ -461,7 +461,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
                       x="0"
                       y="3.5"
                       textAnchor="middle"
-                      fill={edge.isEpsilon ? '#38bdf8' : isEdgeActive ? '#34d399' : '#e2e8f0'}
+                      fill={edge.isEpsilon ? '#878D6B' : isEdgeActive ? '#B4492A' : '#F2F0EC'}
                       fontSize="10"
                       fontFamily="JetBrains Mono, monospace"
                       fontWeight="600"
@@ -498,7 +498,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
                         y1="0"
                         x2="30"
                         y2="0"
-                        stroke="#38bdf8"
+                        stroke="#878D6B"
                         strokeWidth="2.5"
                         markerEnd="url(#arrow-start)"
                       />
@@ -506,7 +506,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
                         x="-4"
                         y="-6"
                         textAnchor="middle"
-                        fill="#38bdf8"
+                        fill="#878D6B"
                         fontSize="9"
                         fontFamily="JetBrains Mono, monospace"
                         fontWeight="700"
@@ -521,7 +521,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
                     <circle
                       r={r + (isHighlighted ? 8 : 6)}
                       fill="none"
-                      stroke={isHighlighted ? '#f59e0b' : '#14b8a6'}
+                      stroke={isHighlighted ? '#B4492A' : '#878D6B'}
                       strokeWidth={isHighlighted ? 2.5 : 2}
                       strokeDasharray={isHighlighted ? '4 2' : '3 3'}
                       className="animate-spin"
@@ -532,18 +532,18 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
                   {/* Primary Node Circle */}
                   <circle
                     r={r}
-                    fill={isHighlighted ? '#451a03' : node.isAccepting ? '#064e3b' : '#0f172a'}
+                    fill={isHighlighted ? '#28130E' : node.isAccepting ? '#161F17' : '#191816'}
                     stroke={
                       isHighlighted
-                        ? '#f59e0b'
+                        ? '#B4492A'
                         : isSelected
-                        ? '#38bdf8'
+                        ? '#B4492A'
                         : node.isAccepting
-                        ? '#10b981'
-                        : '#14b8a6'
+                        ? '#878D6B'
+                        : '#3A3835'
                     }
                     strokeWidth={isHighlighted ? 3.5 : isSelected ? 3 : 2}
-                    className="transition-colors group-hover:stroke-teal-300"
+                    className="transition-colors group-hover:stroke-cipher-sage"
                   />
 
                   {/* Double circle for accepting state */}
@@ -551,7 +551,7 @@ export const AutomataGraphViewer: React.FC<AutomataGraphViewerProps> = ({
                     <circle
                       r={r - 5}
                       fill="none"
-                      stroke={isSelected ? '#38bdf8' : '#10b981'}
+                      stroke={isSelected ? '#B4492A' : '#878D6B'}
                       strokeWidth="1.5"
                     />
                   )}
