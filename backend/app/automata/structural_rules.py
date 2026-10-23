@@ -165,7 +165,7 @@ class StructuralRuleEvaluator:
     def _precompile_rules(self) -> None:
         """Pre-compiles all registered structural rules through the MOC pipeline."""
         for rule in STRUCTURAL_RULES:
-            if rule.regex_pattern not in self._automata_cache:
+            if rule.id not in self._automata_cache:
                 # Compile through existing MOC pipeline
                 ast = parse_regex(rule.regex_pattern)
                 nfa = ThompsonBuilder().build(ast)

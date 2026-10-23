@@ -50,3 +50,50 @@ def test_convert_empty_regex_returns_422_or_400():
     response = client.post("/api/automata/convert", json={"regex": ""})
     # Pydantic min_length=1 triggers 422 Unprocessable Entity
     assert response.status_code in (400, 422)
+
+
+def test_convert_with_input_string():
+    response = client.post(
+        "/api/automata/convert",
+        json={"regex": "(a|b)*abb", "input_string": "ababb"}
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "execution_trace" in data
+    trace = data["execution_trace"]
+    assert trace["is_accepted"] is True
+    assert trace["total_steps"] == 5
+    assert len(trace["steps"]) == 5
+
+
+def test_simulate_endpoint():
+    # Test accepted string
+    res1 = client.post(
+        "/api/automata/simulate",
+        json={"regex": "http", "input_string": "http"}
+    )
+    assert res1.status_code == 200
+    data1 = res1.json()
+    assert data1["success"] is True
+    assert data1["trace"]["is_accepted"] is True
+
+    # Test rejected string
+    res2 = client.post(
+        "/api/automata/simulate",
+        json={"regex": "http", "input_string": "ftp"}
+    )
+    assert res2.status_code == 200
+    data2 = res2.json()
+    assert data2["trace"]["is_accepted"] is False
+    assert data2["trace"]["final_state"] == "DEAD"
+
+
+def test_convert_character_class():
+    response = client.post("/api/automata/convert", json={"regex": "[0-9]+"})
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["alphabet"]) == 10
+    assert data["nfa"]["state_count"] == 40
+    assert data["dfa"]["state_count"] == 11
+    assert data["minimized_dfa"]["state_count"] == 2
+

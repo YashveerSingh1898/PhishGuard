@@ -24,8 +24,9 @@ from typing import List, Optional, Union
 class RegexSyntaxError(ValueError):
     """Raised when a regular expression violates grammatical syntax."""
 
-    def __init__(self, message: str, position: Optional[int] = None):
+    def __init__(self, message: str, position: Optional[int] = None, pattern: Optional[str] = None):
         self.position = position
+        self.pattern = pattern
         if position is not None:
             full_msg = f"{message} (at index {position})"
         else:
@@ -84,9 +85,38 @@ class OptionalNode(RegexNode):
 
 @dataclass
 class Token:
-    type: str  # 'LITERAL', 'UNION', 'STAR', 'PLUS', 'OPTIONAL', 'LPAREN', 'RPAREN', 'EOF'
+    type: str  # 'LITERAL', 'UNION', 'STAR', 'PLUS', 'OPTIONAL', 'LPAREN', 'RPAREN', 'CHAR_CLASS', 'EOF'
     value: str
     position: int
+
+
+def expand_character_class(content: str, pos: int) -> List[str]:
+    """Expands character class content like '0-9', 'a-z', 'A-Z', or 'abc' into a sorted list of unique characters."""
+    chars: List[str] = []
+    k = 0
+    m = len(content)
+    seen = set()
+    while k < m:
+        if k + 2 < m and content[k + 1] == '-':
+            start_c = content[k]
+            end_c = content[k + 2]
+            if ord(start_c) > ord(end_c):
+                raise RegexSyntaxError(f"Invalid range '{start_c}-{end_c}' in character class", pos)
+            for code in range(ord(start_c), ord(end_c) + 1):
+                c = chr(code)
+                if c not in seen:
+                    seen.add(c)
+                    chars.append(c)
+            k += 3
+        else:
+            c = content[k]
+            if c not in seen:
+                seen.add(c)
+                chars.append(c)
+            k += 1
+    if not chars:
+        raise RegexSyntaxError("Empty character class '[]'", pos)
+    return sorted(chars)
 
 
 def tokenize(pattern: str) -> List[Token]:
@@ -111,6 +141,18 @@ def tokenize(pattern: str) -> List[Token]:
             escaped_char = pattern[i + 1]
             tokens.append(Token('LITERAL', escaped_char, pos))
             i += 2
+        elif char == '[':
+            # Parse bracketed character class
+            close_idx = pattern.find(']', i + 1)
+            if close_idx == -1:
+                raise RegexSyntaxError("Unmatched opening bracket '['", pos)
+            class_content = pattern[i + 1:close_idx]
+            if not class_content:
+                raise RegexSyntaxError("Empty character class '[]'", pos)
+            tokens.append(Token('CHAR_CLASS', class_content, pos))
+            i = close_idx + 1
+        elif char == ']':
+            raise RegexSyntaxError("Unmatched closing bracket ']'", pos)
         elif char == '|':
             tokens.append(Token('UNION', '|', pos))
             i += 1
@@ -251,6 +293,16 @@ class RegexParser:
             self.consume('LITERAL')
             return LiteralNode(char=tok.value)
 
+        elif tok.type == 'CHAR_CLASS':
+            self.consume('CHAR_CLASS')
+            chars = expand_character_class(tok.value, tok.position)
+            if len(chars) == 1:
+                return LiteralNode(char=chars[0])
+            node = LiteralNode(char=chars[0])
+            for ch in chars[1:]:
+                node = UnionNode(left=node, right=LiteralNode(char=ch))
+            return node
+
         elif tok.type == 'LPAREN':
             lparen_tok = self.consume('LPAREN')
             self.paren_stack.append(lparen_tok)
@@ -281,7 +333,7 @@ class RegexParser:
 
     def _can_start_primary(self) -> bool:
         """Checks if the current token can begin a primary expression."""
-        return self.current_token().type in ('LITERAL', 'LPAREN')
+        return self.current_token().type in ('LITERAL', 'CHAR_CLASS', 'LPAREN')
 
 
 def parse_regex(pattern: str) -> RegexNode:

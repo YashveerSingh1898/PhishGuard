@@ -4,6 +4,7 @@
 
 import {
   AutomataConvertResponse,
+  DFAExecutionTrace,
   ApiErrorDetail,
   DetectionRequest,
   DetectionResponse,
@@ -45,7 +46,7 @@ export async function checkBackendHealth(): Promise<{
   }
 }
 
-export async function convertRegex(pattern: string): Promise<AutomataConvertResponse> {
+export async function convertRegex(pattern: string, inputString?: string): Promise<AutomataConvertResponse> {
   const trimmed = pattern.trim();
   if (!trimmed) {
     throw new AutomataApiError('Regular expression cannot be empty.');
@@ -53,13 +54,17 @@ export async function convertRegex(pattern: string): Promise<AutomataConvertResp
 
   let response: Response;
   try {
+    const payload: { regex: string; input_string?: string } = { regex: trimmed };
+    if (inputString !== undefined) {
+      payload.input_string = inputString;
+    }
     response = await fetch(`${API_BASE_URL}/api/automata/convert`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: JSON.stringify({ regex: trimmed }),
+      body: JSON.stringify(payload),
     });
   } catch {
     throw new AutomataApiError(
@@ -95,6 +100,48 @@ export async function convertRegex(pattern: string): Promise<AutomataConvertResp
 
   const result = await response.json();
   return result as AutomataConvertResponse;
+}
+
+export async function simulateAutomata(pattern: string, inputString: string): Promise<DFAExecutionTrace> {
+  const trimmed = pattern.trim();
+  if (!trimmed) {
+    throw new AutomataApiError('Regular expression cannot be empty.');
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/api/automata/simulate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ regex: trimmed, input_string: inputString }),
+    });
+  } catch {
+    throw new AutomataApiError(
+      'Unable to connect to the backend API server.',
+      undefined,
+      'ConnectionError'
+    );
+  }
+
+  if (!response.ok) {
+    let errorDetail: ApiErrorDetail | undefined;
+    try {
+      const data = await response.json();
+      if (data && typeof data === 'object' && data.detail) {
+        errorDetail = typeof data.detail === 'object' ? data.detail : { message: String(data.detail) };
+      }
+    } catch {
+      // ignore
+    }
+    const message = errorDetail?.message || `Simulation failed with status ${response.status}`;
+    throw new AutomataApiError(message, errorDetail?.position, errorDetail?.error);
+  }
+
+  const result = await response.json();
+  return result.trace as DFAExecutionTrace;
 }
 
 export async function analyzeThreat(request: DetectionRequest): Promise<DetectionResponse> {

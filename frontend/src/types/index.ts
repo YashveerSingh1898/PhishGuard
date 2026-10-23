@@ -136,6 +136,7 @@ export interface AutomataConvertResponse {
   nfa: NFAData;
   dfa: DFAData;
   minimized_dfa: MinimizedDFAData;
+  execution_trace?: DFAExecutionTrace;
 }
 
 export interface ApiErrorDetail {
@@ -175,9 +176,9 @@ export interface EvaluatedRule {
   candidate_input: string;
   matched: boolean;
   score_contribution: number;
-  automata: AutomataConvertResponse;
-  candidate_trace: DFAExecutionTrace;
-  url_trace: DFAExecutionTrace;
+  automata?: AutomataConvertResponse;
+  candidate_trace?: DFAExecutionTrace;
+  url_trace?: DFAExecutionTrace;
   explanation: string;
 }
 
