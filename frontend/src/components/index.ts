@@ -9,3 +9,4 @@ export { TheoryModal } from './TheoryModal';
 export { DetectionScanner } from './DetectionScanner';
 export { DetectionResultsCard } from './DetectionResultsCard';
 export { AutomataExecutionViewer } from './AutomataExecutionViewer';
+export { EmailUploadPanel } from './EmailUploadPanel';

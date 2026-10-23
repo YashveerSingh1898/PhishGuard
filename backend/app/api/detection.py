@@ -7,17 +7,34 @@ transitions, executing NLP classification, and performing weighted risk fusion.
 
 import time
 from typing import Dict, Any, List, Optional
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, UploadFile, File
 from pydantic import BaseModel, Field
 
 from app.automata.structural_rules import StructuralRuleEvaluator, STRUCTURAL_RULES
 from app.nlp.classifier import get_nlp_classifier
 from app.fusion.engine import compute_risk_fusion, DEFAULT_FUSION_CONFIG
+from app.email_parser import parse_email_file
 
 router = APIRouter(prefix="", tags=["Threat Detection Engine"])
 
 # Initialize structural rule evaluator singleton
 _evaluator = StructuralRuleEvaluator()
+
+
+class ParsedEmailResponse(BaseModel):
+    """Normalized parsed email response model."""
+    success: bool = True
+    filename: str
+    file_size_bytes: int
+    file_type: str
+    sender: str = ""
+    subject: str = ""
+    body: str = ""
+    extracted_urls: List[str] = Field(default_factory=list)
+    primary_url: str = ""
+    missing_fields: List[str] = Field(default_factory=list)
+    warnings: List[str] = Field(default_factory=list)
+    headers: Dict[str, str] = Field(default_factory=dict)
 
 
 class DetectionRequest(BaseModel):
@@ -219,3 +236,82 @@ async def analyze_threat(request: DetectionRequest) -> DetectionResponse:
                 "message": f"Error executing threat analysis: {str(e)}",
             },
         )
+
+
+@router.post(
+    "/detection/parse-email",
+    response_model=ParsedEmailResponse,
+    summary="Parse an uploaded .eml, .txt, or .pdf email file",
+)
+@router.post(
+    "/detection/upload",
+    response_model=ParsedEmailResponse,
+    include_in_schema=False,
+    summary="Alias for /detection/parse-email",
+)
+@router.post(
+    "/parse-email",
+    response_model=ParsedEmailResponse,
+    include_in_schema=False,
+    summary="Alias for /detection/parse-email",
+)
+async def parse_email_upload(file: UploadFile = File(...)) -> ParsedEmailResponse:
+    """Safely extracts normalized email fields (sender, subject, body, extracted URLs)
+    from an uploaded .eml (RFC 822 / MIME), .txt, or .pdf email file.
+    Does not execute attachments, run scripts, or make external network calls.
+    Returns explicit notifications for missing fields so users can review/edit
+    before submitting to the threat detection pipeline.
+    """
+    if not file or not file.filename:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"success": False, "error": "InvalidUpload", "message": "No file uploaded or missing filename."},
+        )
+
+    # Read file content safely in memory
+    try:
+        content = await file.read()
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"success": False, "error": "ReadError", "message": f"Failed reading uploaded file: {str(exc)}"},
+        )
+
+    try:
+        parsed_result = parse_email_file(content, file.filename)
+        return ParsedEmailResponse(**parsed_result.to_dict())
+    except ValueError as ve:
+        err_msg = str(ve)
+        status_code = status.HTTP_400_BAD_REQUEST
+        error_type = "EmailParseError"
+
+        if "exceeds" in err_msg.lower() and "mb" in err_msg.lower():
+            status_code = getattr(status, "HTTP_413_CONTENT_TOO_LARGE", 413)
+            error_type = "FileSizeExceededError"
+        elif "unsupported" in err_msg.lower():
+            status_code = status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
+            error_type = "UnsupportedFormatError"
+        elif "ocr" in err_msg.lower() or "scanned" in err_msg.lower():
+            error_type = "OCRRequiredError"
+        elif "password" in err_msg.lower() or "encrypted" in err_msg.lower():
+            error_type = "PDFEncryptedError"
+
+        raise HTTPException(
+            status_code=status_code,
+            detail={
+                "success": False,
+                "error": error_type,
+                "message": err_msg,
+            },
+        )
+    except Exception as exc:
+        # Avoid exposing internal server stack traces to frontend
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={
+                "success": False,
+                "error": "EmailParseError",
+                "message": f"Unable to parse email file: {str(exc)}",
+            },
+        )
+

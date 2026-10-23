@@ -7,6 +7,7 @@ import {
   ApiErrorDetail,
   DetectionRequest,
   DetectionResponse,
+  ParsedEmailResponse,
 } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
@@ -136,3 +137,39 @@ export async function analyzeThreat(request: DetectionRequest): Promise<Detectio
   const result = await response.json();
   return result as DetectionResponse;
 }
+
+export async function parseEmailFile(file: File): Promise<ParsedEmailResponse> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/api/detection/parse-email`, {
+      method: 'POST',
+      body: formData,
+    });
+  } catch {
+    throw new Error(
+      'Unable to connect to the email parsing service at http://127.0.0.1:8000. Please ensure the backend is running.'
+    );
+  }
+
+  if (!response.ok) {
+    let errorMsg = `Email parsing failed with status code ${response.status}`;
+    try {
+      const data = await response.json();
+      if (data?.detail?.message) {
+        errorMsg = data.detail.message;
+      } else if (typeof data?.detail === 'string') {
+        errorMsg = data.detail;
+      }
+    } catch {
+      // JSON parse failed
+    }
+    throw new Error(errorMsg);
+  }
+
+  const result = await response.json();
+  return result as ParsedEmailResponse;
+}
+

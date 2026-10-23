@@ -224,3 +224,18 @@ export interface DetectionResponse {
   limitations_note: string;
   execution_time_ms: number;
 }
+
+export interface ParsedEmailResponse {
+  success: boolean;
+  filename: string;
+  file_size_bytes: number;
+  file_type: 'eml' | 'txt' | 'pdf' | string;
+  sender: string;
+  subject: string;
+  body: string;
+  extracted_urls: string[];
+  primary_url: string;
+  missing_fields: string[];
+  warnings: string[];
+  headers: Record<string, string>;
+}

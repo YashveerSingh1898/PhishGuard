@@ -5,8 +5,10 @@ from app.nlp.classifier import (
     PhishingNLPClassifier,
     NLPAnalysisResult,
     get_nlp_classifier,
+    reset_nlp_classifier,
     LIMITATIONS_NOTE,
 )
+from app.nlp.train import train_and_evaluate, validate_dataset
 
 __all__ = [
     "preprocess_text",
@@ -16,5 +18,9 @@ __all__ = [
     "PhishingNLPClassifier",
     "NLPAnalysisResult",
     "get_nlp_classifier",
+    "reset_nlp_classifier",
+    "train_and_evaluate",
+    "validate_dataset",
     "LIMITATIONS_NOTE",
 ]
+

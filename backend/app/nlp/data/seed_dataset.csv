@@ -19,6 +19,36 @@ text,label
 "The student government association election ballots are open until 5:00 PM tomorrow afternoon.",Legitimate
 "Here is the summary of project deliverables and milestones agreed upon during today's sprint review.",Legitimate
 "Your paper submission titled 'Formal Verification of DFA' has been received by the conference committee.",Legitimate
+"Invitation: Department seminar on Natural Language Processing architectures this Wednesday at 3 PM.",Legitimate
+"Your request for campus parking permit renewal for the upcoming academic year has been approved.",Legitimate
+"Quarterly financial report and investor briefing notes are now available on the company intranet.",Legitimate
+"The lab printer in Room 304 is currently low on toner and will be refilled by IT services tomorrow.",Legitimate
+"Confirming your appointment with academic advisor Prof. Miller on Thursday at 11:00 AM.",Legitimate
+"Your GitHub repository pull request #42 has been successfully merged into the main development branch.",Legitimate
+"Thank you for attending the career fair. Attached is the directory of participating tech employers.",Legitimate
+"Notice from Facility Management: Routine fire alarm inspection will take place between 9 AM and 11 AM.",Legitimate
+"Your subscription to the ACM Digital Library has been renewed for the current academic calendar.",Legitimate
+"Office hours for CS 302 have been moved to Tuesday afternoon from 2:00 to 4:00 PM in Hall 210.",Legitimate
+"The university health center is providing seasonal influenza vaccines starting this Monday.",Legitimate
+"Your submitted assignment 'Automata Lab 3' has been graded. View feedback on the student portal.",Legitimate
+"Reminder: Fall graduation commencement ceremony registration closes at the end of this month.",Legitimate
+"Your payment of $45.00 for the community recreation workshop has been processed. Receipt attached.",Legitimate
+"Campus shuttle routes will operate on a weekend schedule during the upcoming holiday weekend.",Legitimate
+"The engineering senior capstone showcase schedule and booth assignments have been finalized.",Legitimate
+"Confirmation: Your registration for the regional ACM programming contest is complete.",Legitimate
+"Please complete the annual anonymous employee satisfaction survey by next Friday afternoon.",Legitimate
+"Your request for access to the university high-performance computing cluster has been granted.",Legitimate
+"Scheduled network maintenance on residence hall Wi-Fi will occur Tuesday morning from 4 AM to 6 AM.",Legitimate
+"Your hotel booking confirmation for the IEEE symposium at the Grand Hyatt is confirmed for May 12-15.",Legitimate
+"The undergraduate research symposium call for posters is now open. Deadline is next month.",Legitimate
+"Your order of textbooks from the campus bookstore is ready for pickup at the customer counter.",Legitimate
+"Department faculty meeting will convene this Thursday at 1:00 PM in the Dean's conference room.",Legitimate
+"Your quarterly water quality report from municipal utilities is now accessible on the public portal.",Legitimate
+"Please review the revised laboratory safety guidelines and sign the acknowledgement form.",Legitimate
+"Your application for the summer software engineering research internship has been received.",Legitimate
+"Reminder: Academic drop/add deadline for semester course registration is 5:00 PM tomorrow.",Legitimate
+"Weekly summary of open bugs and release candidate milestones from the software QA team.",Legitimate
+"Your appointment for vehicle safety inspection is scheduled for Wednesday at 8:30 AM.",Legitimate
 "URGENT: Your account has been suspended due to suspicious activity. Verify your identity within 24 hours to prevent permanent closure.",Phishing
 "Security Alert: We detected an unauthorized login to your account from an unrecognized IP address. Confirm your password immediately.",Phishing
 "Immediate Action Required: Your direct deposit payroll could not be processed. Update your banking credentials now to receive pay.",Phishing
@@ -39,3 +69,33 @@ text,label
 "Critical Notice: Your cloud drive storage will be terminated in 12 hours. Update your billing information now to save your files.",Phishing
 "Human Resources Alert: Updated executive salary adjustments for the current quarter. Sign in with your company credentials to view.",Phishing
 "Security Warning: Your password expires in 2 hours. Click the link below to verify your current password and set a new one.",Phishing
+"URGENT: Bank security alert! Unauthorized debit of $899.00 to merchant overseas. Click here immediately to dispute this charge.",Phishing
+"Your PayPal account access has been limited due to suspicious transactions. Submit photo ID and credit card details to restore access.",Phishing
+"Action Required: Your Microsoft 365 business license has expired. Authenticate with your administrative credentials to maintain access.",Phishing
+"Final Warning: Your package delivery was placed on hold due to missing address verification. Pay $2.95 re-delivery fee immediately.",Phishing
+"IRS Urgent Notice: Unreported earnings detected on your tax return. Complete identity verification form to avoid criminal penalties.",Phishing
+"Attention Employee: Executive bonus distribution spreadsheet has been uploaded. Enter corporate credentials to access document.",Phishing
+"Critical Security Alert: Your social security number was flagged in a recent data breach. Sign in to credit monitoring portal now.",Phishing
+"Netflix Notification: We could not process your membership fee. Update payment details immediately to prevent streaming interruption.",Phishing
+"URGENT: Amazon customer account locked due to suspicious login attempt from Russia. Verify billing information immediately.",Phishing
+"Direct Deposit Warning: Your paycheck direct deposit routing number was changed. If you did not do this, login immediately to reverse.",Phishing
+"Meta Security Team: Your Facebook business page is scheduled for deletion due to trademark violations. Submit appeal within 24 hours.",Phishing
+"Bank of America Alert: Unusual ATM withdrawal request detected. Click here to confirm authorization or immediately freeze your account.",Phishing
+"Your FedEx parcel is awaiting customs clearance fee payment. Provide payment details within 24 hours or package will be returned.",Phishing
+"DocuSign Alert: CEO has sent you an urgent contract requiring immediate electronic signature. Enter email password to view document.",Phishing
+"Your Office 365 mailbox has 14 pending incoming emails on hold. Release messages by confirming your email account credentials.",Phishing
+"Crypto Wallet Security Notice: Suspicious withdrawal of 0.45 BTC initiated. Connect your private recovery phrase immediately to cancel.",Phishing
+"URGENT: Wire transfer verification required. Confirm corporate bank account credentials to authorize pending contractor disbursement.",Phishing
+"Google Account Alert: A foreign device in Nigeria has accessed your email. Verify your identity immediately or account will be locked.",Phishing
+"Help Desk Alert: Routine IT server migration requires all employees to validate username and active password before 5 PM today.",Phishing
+"Your Chase Sapphire credit card has been suspended due to suspected fraudulent charge. Re-verify card number and CVV code now.",Phishing
+"Legal Subpoena Notice: You have been served with a court summons in civil lawsuit #8812. Download encrypted summons using email login.",Phishing
+"Urgent Security Memo: Your multi-factor authentication (MFA) token has expired. Re-authenticate via the security portal immediately.",Phishing
+"Internal Revenue Notice: Your tax refund payment voucher is ready for electronic deposit. Submit checking account details now.",Phishing
+"Your Dropbox enterprise storage quota has been suspended. Re-activate your enterprise subscription to prevent total data loss.",Phishing
+"Fraud Alert: Unrecognized Zelle transfer of $650.00 was sent from your account. Log in immediately to reverse this transaction.",Phishing
+"DHL Express Notification: Parcel delivery failed because recipient signature was missing. Pay rescheduling fee to release package.",Phishing
+"CEO Confidential Request: Are you at your desk? I need an urgent wire transfer executed for a confidential vendor acquisition.",Phishing
+"Account Suspension Notice: Your Webmail service will be deactivated tonight due to non-compliance. Verify your account immediately.",Phishing
+"Wells Fargo Security Alert: Suspicious login from Firefox on Linux. If this was not you, verify your online banking PIN immediately.",Phishing
+"LinkedIn Security: Your profile has been flagged for violating professional community policies. Verify account ownership now.",Phishing

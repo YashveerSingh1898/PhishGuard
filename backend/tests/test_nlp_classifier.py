@@ -1,8 +1,8 @@
-"""Tests for NLP Text Preprocessing and Naive Bayes Classifier."""
-
+import os
 import pytest
 from app.nlp.preprocessor import normalize_text, tokenize, remove_stopwords, preprocess_text
 from app.nlp.classifier import get_nlp_classifier, PhishingNLPClassifier
+
 
 
 def test_text_normalization():
@@ -71,3 +71,57 @@ def test_standard_legitimate_text_scores_low():
     res = classifier.predict(text)
     assert res.nlp_score < 40.0
     assert res.predicted_class == "Legitimate"
+
+
+def test_model_artifact_loading_and_metadata():
+    """Classifier loads the serialized joblib model and exposes metrics and metadata."""
+    from app.nlp.classifier import PhishingNLPClassifier, DEFAULT_MODEL_PATH
+    import os
+
+    assert os.path.exists(DEFAULT_MODEL_PATH), "Serialized model artifact must exist"
+    classifier = PhishingNLPClassifier()
+    assert classifier.is_trained is True
+    assert classifier.is_loaded_from_disk is True
+    assert classifier.training_size >= 75
+    assert "accuracy" in classifier.metrics
+    assert classifier.metrics["accuracy"] >= 0.85
+    assert "confusion_matrix" in classifier.metrics
+    assert "per_class" in classifier.metrics
+    assert "Legitimate" in classifier.metrics["per_class"]
+    assert "Phishing" in classifier.metrics["per_class"]
+
+
+def test_dataset_validation():
+    """Schema validation accepts valid dataset and rejects invalid or non-existent files."""
+    from app.nlp.train import validate_dataset, DEFAULT_DATASET_PATH
+    import tempfile
+
+    texts, labels = validate_dataset(DEFAULT_DATASET_PATH)
+    assert len(texts) == 100
+    assert len(labels) == 100
+    assert labels.count("Legitimate") == 50
+    assert labels.count("Phishing") == 50
+
+    with pytest.raises(FileNotFoundError):
+        validate_dataset("/path/to/nonexistent_dataset.csv")
+
+    with tempfile.NamedTemporaryFile("w+", delete=False, suffix=".csv") as tmp:
+        tmp.write("invalid_column,another_col\nhello,world\n")
+        tmp_path = tmp.name
+
+    try:
+        with pytest.raises(ValueError, match="Invalid dataset schema"):
+            validate_dataset(tmp_path)
+    finally:
+        os.remove(tmp_path)
+
+
+def test_out_of_vocabulary_words_fallback():
+    """Input with rare out-of-vocabulary tokens falls back safely to neutral baseline."""
+    classifier = get_nlp_classifier()
+    # Random nonsense tokens not in vocabulary
+    res = classifier.predict("zxqvbt jklmno qwertyuiopasdfghjkl")
+    assert res.predicted_class == "Legitimate"
+    assert res.nlp_score == 15.0
+    assert "outside the training lexicon" in res.explanation
+

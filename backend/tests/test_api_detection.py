@@ -76,3 +76,67 @@ def test_existing_automata_endpoint_still_works():
     assert "nfa" in data
     assert "dfa" in data
     assert "minimized_dfa" in data
+
+
+def test_url_extracted_from_email_body_when_url_field_empty():
+    """When url field is omitted, extract URL from body and evaluate rules."""
+    payload = {
+        "sender": "alert@paypal-update.net",
+        "url": "",
+        "subject": "Account Review",
+        "body": "Please login to your account immediately at http://paypal-update.xyz/login to verify your credentials.",
+    }
+    response = client.post("/api/detection/analyze", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+
+    assert data["success"] is True
+    assert "extracted_url" in data["input_summary"]
+    assert "paypal-update.xyz" in data["input_summary"]["extracted_url"]
+    assert data["structural_score"] > 0
+    # Verify evaluated_rules contain candidate_trace and url_trace
+    assert len(data["evaluated_rules"]) == 6
+    for rule in data["evaluated_rules"]:
+        assert "automata" in rule
+        assert "nfa" in rule["automata"]
+        assert "dfa" in rule["automata"]
+        assert "minimized_dfa" in rule["automata"]
+        assert "candidate_trace" in rule
+        assert "url_trace" in rule
+
+
+def test_fusion_arithmetic_consistency():
+    """Final score strictly equals round(0.6 * structural + 0.4 * nlp, 2)."""
+    payload = {
+        "sender": "Security <security@apple.com>",
+        "url": "http://192.168.1.1/verify",
+        "subject": "Urgent Apple ID Suspension",
+        "body": "Your Apple ID has been suspended. Re-verify credentials immediately.",
+    }
+    response = client.post("/api/detection/analyze", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+
+    expected_final = round(0.60 * data["structural_score"] + 0.40 * data["nlp_score"], 2)
+    assert abs(data["final_score"] - expected_final) <= 0.05
+    assert data["structural_contribution"] == round(0.60 * data["structural_score"], 2)
+    assert data["nlp_contribution"] == round(0.40 * data["nlp_score"], 2)
+
+
+def test_detect_alias_endpoint():
+    """POST /api/detect behaves as an exact alias for /api/detection/analyze."""
+    payload = {
+        "sender": "registrar@university.edu",
+        "url": "https://portal.university.edu/student/grades",
+        "subject": "Grades posted",
+        "body": "Your grades are available.",
+    }
+    res_detect = client.post("/api/detect", json=payload)
+    res_analyze = client.post("/api/detection/analyze", json=payload)
+
+    assert res_detect.status_code == 200
+    assert res_analyze.status_code == 200
+    assert res_detect.json()["final_score"] == res_analyze.json()["final_score"]
+    assert res_detect.json()["verdict"] == res_analyze.json()["verdict"]
+
+

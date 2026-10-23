@@ -13,8 +13,11 @@ import {
   Layers,
   ChevronDown,
   ChevronUp,
+  PenTool,
+  UploadCloud,
 } from 'lucide-react';
 import { DetectionRequest, DetectionResponse } from '../types';
+import { EmailUploadPanel } from '../components/EmailUploadPanel';
 
 interface AnalyzeEmailViewProps {
   request: DetectionRequest;
@@ -82,6 +85,7 @@ export const AnalyzeEmailView: React.FC<AnalyzeEmailViewProps> = ({
 }) => {
   const [showTechnicalDetails, setShowTechnicalDetails] = useState<boolean>(false);
   const [formValidation, setFormValidation] = useState<string | null>(null);
+  const [inputMethod, setInputMethod] = useState<'manual' | 'upload'>('manual');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,8 +130,8 @@ export const AnalyzeEmailView: React.FC<AnalyzeEmailViewProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column: Input Form */}
         <section className="lg:col-span-7 cipher-surface rounded-2xl border border-cipher-border p-6 sm:p-7 space-y-5">
-          {/* Header & Presets */}
-          <div className="space-y-3 pb-4 border-b border-cipher-border">
+          {/* Header & Mode Switcher */}
+          <div className="space-y-4 pb-4 border-b border-cipher-border">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h2 className="text-lg font-bold text-cipher-text font-sans tracking-tight">
@@ -139,28 +143,65 @@ export const AnalyzeEmailView: React.FC<AnalyzeEmailViewProps> = ({
               </div>
             </div>
 
-            {/* Demonstration Preset Selector */}
-            <div className="pt-2 flex flex-wrap items-center gap-1.5 font-mono text-xs">
-              <span className="text-[11px] text-cipher-muted mr-1 flex items-center gap-1 font-semibold">
-                <Sparkles className="w-3 h-3 text-cipher-terracotta" />
-                <span>Samples:</span>
-              </span>
-              {DEMO_PRESETS.map((preset) => (
-                <button
-                  key={preset.name}
-                  type="button"
-                  onClick={() => handleApplyPreset(preset)}
-                  disabled={isLoading}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] border font-medium transition-all ${preset.badgeStyle}`}
-                  title={preset.name}
-                >
-                  {preset.badge}
-                </button>
-              ))}
+            {/* Input-Method Selector: Option A (Enter Manually) & Option B (Upload Email) */}
+            <div className="flex items-center p-1 bg-cipher-elevated rounded-xl border border-cipher-border font-mono text-xs">
+              <button
+                type="button"
+                onClick={() => {
+                  setFormValidation(null);
+                  setInputMethod('manual');
+                }}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg font-medium transition-all ${
+                  inputMethod === 'manual'
+                    ? 'bg-cipher-terracotta text-cipher-text font-bold shadow-sm'
+                    : 'text-cipher-muted hover:text-cipher-text'
+                }`}
+              >
+                <PenTool className="w-3.5 h-3.5" />
+                <span>Enter Manually</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setFormValidation(null);
+                  setInputMethod('upload');
+                }}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg font-medium transition-all ${
+                  inputMethod === 'upload'
+                    ? 'bg-cipher-terracotta text-cipher-text font-bold shadow-sm'
+                    : 'text-cipher-muted hover:text-cipher-text'
+                }`}
+              >
+                <UploadCloud className="w-3.5 h-3.5" />
+                <span>Upload Email File</span>
+              </button>
             </div>
+
+            {/* Demonstration Preset Selector (shown for manual mode) */}
+            {inputMethod === 'manual' && (
+              <div className="pt-1 flex flex-wrap items-center gap-1.5 font-mono text-xs">
+                <span className="text-[11px] text-cipher-muted mr-1 flex items-center gap-1 font-semibold">
+                  <Sparkles className="w-3 h-3 text-cipher-terracotta" />
+                  <span>Samples:</span>
+                </span>
+                {DEMO_PRESETS.map((preset) => (
+                  <button
+                    key={preset.name}
+                    type="button"
+                    onClick={() => handleApplyPreset(preset)}
+                    disabled={isLoading}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] border font-medium transition-all ${preset.badgeStyle}`}
+                    title={preset.name}
+                  >
+                    {preset.badge}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Form */}
+          {/* Option A: Manual Entry Form */}
+          {inputMethod === 'manual' && (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Sender */}
@@ -280,6 +321,19 @@ export const AnalyzeEmailView: React.FC<AnalyzeEmailViewProps> = ({
               </button>
             </div>
           </form>
+          )}
+
+          {/* Option B: Upload Email File Panel */}
+          {inputMethod === 'upload' && (
+            <EmailUploadPanel
+              request={request}
+              onChange={onChange}
+              onAnalyze={onAnalyze}
+              isLoading={isLoading}
+              analysisError={error}
+              onClearAll={onClear}
+            />
+          )}
         </section>
 
         {/* Right Column: Live Analysis Summary */}
